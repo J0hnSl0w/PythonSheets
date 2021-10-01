@@ -101,6 +101,7 @@ def calc_date():
 def add_new_month(wbook, creds, is_new_month=False):
     dates = calc_date()
     template_sheet = wbook.worksheet('Template')
+    is_new_year = False
 
     if is_new_month:
         new_sheet = wbook.duplicate_sheet(source_sheet_id=template_sheet.id,
@@ -114,6 +115,12 @@ def add_new_month(wbook, creds, is_new_month=False):
         for i in range(13):
             new_sheet.update(f'E{i+3}', [[f"{dates['this_month']}01."]], raw=False)
 
+        past_year = int(dates['prev_month'][:-4])
+        year = int(dates['this_month'][:-4])
+
+        if past_year < year:
+            is_new_year = True
+
     else:
         new_sheet = wbook.duplicate_sheet(source_sheet_id=template_sheet.id,
                                           insert_sheet_index=11,
@@ -126,9 +133,19 @@ def add_new_month(wbook, creds, is_new_month=False):
         for i in range(13):
             new_sheet.update(f'E{i+3}', [[f"{dates['next_month']}01."]], raw=False)
 
+        year = int(dates['this_month'][:-4])
+        next_year = int(dates['next_month'][:-4])
+
+        if year < next_year:
+            is_new_year = True
+
     print('New sheet added succesfully!')
 
     show_hide_wsheets(creds=creds, wbook_id=wbook.id, sheet_id=new_sheet.id, is_hidden=False)
+
+    if is_new_year:
+        add_new_year(wbook=wbook, creds=creds, is_new_month=is_new_month)
+
     edit_mounthly_costs_sheet(wbook=wbook, creds=creds, is_new_month=is_new_month, dates=dates)
 
 
@@ -211,6 +228,15 @@ def show_hide_wsheets(creds, wbook_id, sheet_id, is_hidden):
     response = request.execute()
 
     return response
+
+
+def add_new_year(wbook, creds, is_new_month):
+    # TODO impelent new year
+    print('Not implemented yet')
+
+def add_new_category():
+    # TODO impelent new category
+    print('Not implemented yet')
 
 
 if __name__ == '__main__':
