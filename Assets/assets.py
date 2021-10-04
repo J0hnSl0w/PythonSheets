@@ -148,6 +148,28 @@ def edit_mounthly_costs_sheet(wbook, creds, is_new_month=False, dates=calc_date(
     print('Done!')
 
 
+def repeat_formula_over_range(creds, wbook_id, sheet_id, formula, start, end):
+    # TODO add this function to places
+    service = discovery.build('sheets', 'v4', credentials=creds)
+
+    requests = {'repeatCell': {
+        "range": {
+            "sheetId": sheet_id,
+            "startRowIndex": start,
+            "endRowIndex": end},
+        "cell": {
+            "userEnteredValue": {
+                "formulaValue": formula}},
+        "fields": 'userEnteredValue'}}
+
+    body = {'requests': [requests]}
+
+    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
+    response = request.execute()
+
+    return response
+
+
 def edit_savings_sheet(wbook, creds, is_new_month=False, dates=calc_date()):
     if is_new_month:
         year = dates['this_month'][:-4]
@@ -347,18 +369,40 @@ def add_new_year(wbook, creds, is_new_month):
 
 
 def add_new_category():
-    # TODO impelent new category
-    print('Not implemented yet')
+    # TODO implement
+    pass
+
+
+def insert_row(creds, wbook_id, sheet_id, start, end, inherit_from_before):
+    service = discovery.build('sheets', 'v4', credentials=creds)
+
+    requests = {'insertDimension': {
+        "range": {
+            "sheetId": sheet_id,
+            "dimension": 'ROWS',
+            "startIndex": start,
+            "endIndex": end},
+        "inheritFromBefore": inherit_from_before}}
+
+    body = {'requests': [requests]}
+
+    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
+    response = request.execute()
+
+    return response
+
 
 
 if __name__ == '__main__':
     workb, creds = open_spread_sheet('Pénz másolata')
 
     # update_sheet_list('Pénz másolata')
-    add_new_month(wbook=workb, creds=creds, is_new_month=True)
+    # add_new_month(wbook=workb, creds=creds, is_new_month=True)
     # calc_date()
 
-    # sheet = workb.worksheet('2021.12.')
+    sheet = workb.worksheet('Havi Kiadások 2021')
     # cell = sheet.acell('H2', 'FORMULA')
+
+    insert_row(creds=creds, wbook_id=workb.id, sheet_id=sheet.id, start=4, end=5, inherit_from_before=True)
 
     print('gg')
