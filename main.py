@@ -1,4 +1,4 @@
-from assets import *
+from Assets.assets import *
 
 
 def choose_from_menu():
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     print('  4 - Refresh savings table')
     print('  5 - Refresh sheet list')
     print(ef.italic + ef.bold + fg.yellow + '- If you want to add a new month, but the program sopped during\n'
-                                            '  the procedure, please re run the program and choose 3 and than 4.' + ef.rs + fg.rs)
+                                            '  the procedure, please re-run the program and choose 3 and than 4.' + ef.rs + fg.rs)
     print(ef.italic + ef.bold + fg.yellow + '- Choose 5, if the program crases, and there is a "list index out of range"\n'
                                             '  line in the error message.\n' + ef.rs + fg.rs)
 
