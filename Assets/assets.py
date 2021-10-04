@@ -1,3 +1,4 @@
+import datetime
 import json
 from datetime import date
 
@@ -26,7 +27,9 @@ def open_spread_sheet(spreadsheet_name: str):
 def update_sheet_list(spreadsheet_name):
     spreadsheet, credentials = open_spread_sheet(spreadsheet_name)
 
-    ssheet = {}
+    ssheet = {'templates': {},
+              'sums': {},
+              'month': {}}
 
     print(ef.italic + ef.bold + fg.yellow + 'Updating sheet list, please wait...' + ef.rs + fg.rs)
 
@@ -37,7 +40,14 @@ def update_sheet_list(spreadsheet_name):
         wsheet = spreadsheet.get_worksheet(i)
         index = i + 1
 
-        ssheet[f'{wsheet.title}'] = [wsheet.id, index]
+        if 'template'.lower() in wsheet.title.lower():  # or 'Template' in wsheet.title:
+            ssheet['templates'][f'{wsheet.title}'] = [wsheet.id, index]
+        elif 'Kiadások' in wsheet.title or 'Megtakarítás' in wsheet.title or \
+                'összesítő' in wsheet.title or 'Rendszeres' in wsheet.title or 'Gyűjtés' in wsheet.title:
+            ssheet['sums'][f'{wsheet.title}'] = [wsheet.id, index]
+        else:
+            ssheet['month'][f'{wsheet.title}'] = [wsheet.id, index]
+
         percent = (i / l) * 100
 
         if k == 9:
@@ -73,32 +83,54 @@ def find_sheet_by_name(name: str, sheet_dict: dict):
 
 def calc_date():
     today = date.today()
-    date_dict = {}
+    defoult_dict = {}
+    date_dict = {'prev_month': '',
+                 'this_month': '',}
 
     if today.month == 1:
-        date_dict = {'prev_month': f'{today.year - 1}.{today.month + 11}.',
-                     'this_month': f'{today.year}.0{today.month}.',
-                     'next_month': f'{today.year}.0{today.month + 1}.'}
+        defoult_dict = {'prev_month': f'{today.year - 1}.{today.month + 11}.',
+                        'this_month': f'{today.year}.0{today.month}.',
+                        'next_month': f'{today.year}.0{today.month + 1}.'}
+
     elif today.month < 9:
-        date_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
-                     'this_month': f'{today.year}.0{today.month}.',
-                     'next_month': f'{today.year}.0{today.month + 1}.'}
+        defoult_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
+                        'this_month': f'{today.year}.0{today.month}.',
+                        'next_month': f'{today.year}.0{today.month + 1}.'}
+
     elif today.month == 9:
-        date_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
-                     'this_month': f'{today.year}.0{today.month}.',
-                     'next_month': f'{today.year}.{today.month + 1}.'}
+        defoult_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
+                        'this_month': f'{today.year}.0{today.month}.',
+                        'next_month': f'{today.year}.{today.month + 1}.'}
+
     elif today.month == 10:
-        date_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
-                     'this_month': f'{today.year}.{today.month}.',
-                     'next_month': f'{today.year}.{today.month + 1}.'}
+        defoult_dict = {'prev_month': f'{today.year}.0{today.month - 1}.',
+                        'this_month': f'{today.year}.{today.month}.',
+                        'next_month': f'{today.year}.{today.month + 1}.'}
+
     elif today.month == 11:
-        date_dict = {'prev_month': f'{today.year}.{today.month - 1}.',
-                     'this_month': f'{today.year}.{today.month}.',
-                     'next_month': f'{today.year}.{today.month + 1}.'}
+        defoult_dict = {'prev_month': f'{today.year}.{today.month - 1}.',
+                        'this_month': f'{today.year}.{today.month}.',
+                        'next_month': f'{today.year}.{today.month + 1}.'}
+
     elif today.month == 12:
-        date_dict = {'prev_month': f'{today.year}.{today.month - 1}.',
-                     'this_month': f'{today.year}.{today.month}.',
-                     'next_month': f'{today.year + 1}.{today.month - 11}.'}
+        defoult_dict = {'prev_month': f'{today.year}.{today.month - 1}.',
+                        'this_month': f'{today.year}.{today.month}.',
+                        'next_month': f'{today.year + 1}.{today.month - 11}.'}
+
+    sn = defoult_dict['this_month']
+    k = find_sheet_by_name(sn, load_json('sheets.jason')['month'])
+    if len(k) != 0 and k[0 == sn]:
+        date_dict['this_month'] = defoult_dict['next_month']
+        date_dict['prev_month'] = defoult_dict['this_month']
+
+    else:
+        sn_prev = defoult_dict['prev_month']
+        l = find_sheet_by_name(sn, load_json('sheets.jason')['month'])
+        if len(l) != 0 and k[0 == sn_prev]:
+            date_dict['this_month'] = defoult_dict['this_month']
+            date_dict['prev_month'] = defoult_dict['prev_month']
+        else:
+            print("You can't create a spreadsheet for this month yet")
 
     return date_dict
 
@@ -116,47 +148,56 @@ def edit_mounthly_costs_sheet(wbook, creds, is_new_month=False, dates=calc_date(
     print(f'Modifying monthly costs table ({cost_sheet.title})  ...', end='  ')
 
     if is_new_month:
-        for i in range(count):
-            value = [
-                f"=SUM(SUMIF('{dates['this_month']}'!$C$4:$C$100;'{sheet_name}'!$A{i + 2};'{dates['this_month']}'!$A$4:$A$100))"]
-            col = None
-            key_value = dates['this_month'][-3:]
+        col = None
+        key_value = dates['this_month'][-3:]
 
-            for key in mounthly_columns:
-                if key == key_value:
-                    col = mounthly_columns[key]
-                    cost_sheet.update(f'{col[0]}{i + 2}', [value], raw=False)
+        for key in mounthly_columns:
+            if key == key_value:
+                col = mounthly_columns[key]
+                break
 
-        show_hide_cols(creds=creds, wbook_id=wbook.id, sheet_id=cost_sheet.id, is_hidden=False, start=col[1] - 1,
-                       end=col[1])
+        start_row = 1
+        end_row = count+1
+        start_col = col[1]-1
+        end_col = col[1]
+
+        value = f"=SUM(SUMIF('{dates['this_month']}'!$C$4:$C$100;'{sheet_name}'!$A2;'{dates['this_month']}'!$A$4:$A$100))"
+
+        repeat_formula_over_range(creds=creds, wbook_id=wbook.id, sheet_id=cost_sheet.id, formula=value,
+                                  start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
 
     else:
-        for j in range(count):
-            value = [
-                f"=SUM(SUMIF('{dates['next_month']}'!$C$4:$C$100;'{sheet_name}'!$A{j + 2};'{dates['next_month']}'!$A$4:$A$100))"]
-            col = None
-            key_value = dates['next_month'][-3:]
+        col = None
+        key_value = dates['next_month'][-3:]
 
-            for key in mounthly_columns:
-                if key == key_value:
-                    col = mounthly_columns[key]
-                    cost_sheet.update(f'{col[0]}{j + 2}', [value], raw=False)
+        for key in mounthly_columns:
+            if key == key_value:
+                col = mounthly_columns[key]
+                break
 
-        show_hide_cols(creds=creds, wbook_id=wbook.id, sheet_id=cost_sheet.id, is_hidden=False, start=col[1] - 1,
-                       end=col[1])
+        start_row = 1
+        end_row = count+1
+        start_col = col[1]-1
+        end_col = col[1]
+
+        value = f"=SUM(SUMIF('{dates['next_month']}'!$C$4:$C$100;'{sheet_name}'!$A2;'{dates['next_month']}'!$A$4:$A$100))"
+
+        repeat_formula_over_range(creds=creds, wbook_id=wbook.id, sheet_id=cost_sheet.id, formula=value,
+                                  start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
 
     print('Done!')
 
 
-def repeat_formula_over_range(creds, wbook_id, sheet_id, formula, start, end):
-    # TODO add this function to places
+def repeat_formula_over_range(creds, wbook_id, sheet_id, formula, start_row, start_col, end_row, end_col):
     service = discovery.build('sheets', 'v4', credentials=creds)
 
     requests = {'repeatCell': {
         "range": {
             "sheetId": sheet_id,
-            "startRowIndex": start,
-            "endRowIndex": end},
+            "startRowIndex": start_row,
+            "endRowIndex": end_row,
+            "startColumnIndex": start_col,
+            "endColumnIndex": end_col},
         "cell": {
             "userEnteredValue": {
                 "formulaValue": formula}},
@@ -260,7 +301,7 @@ def add_new_month(wbook, creds, is_new_month=False):
 
     if is_new_month:
         prev_sheet = wbook.worksheet(dates['prev_month'])
-        dict = find_sheet_by_name(dates['prev_month'], load_json('sheets.jason'))
+        dict = find_sheet_by_name(dates['prev_month'], load_json('sheets.jason')['month'])
 
         new_sheet = wbook.duplicate_sheet(source_sheet_id=template_sheet.id,
                                           insert_sheet_index=dict[2] - 1,
@@ -287,7 +328,7 @@ def add_new_month(wbook, creds, is_new_month=False):
 
     else:
         prev_sheet = wbook.worksheet(dates['prev_month'])
-        dict = find_sheet_by_name(dates['this_month'], load_json('sheets.jason'))
+        dict = find_sheet_by_name(dates['this_month'], load_json('sheets.jason')['month'])
 
         new_sheet = wbook.duplicate_sheet(source_sheet_id=template_sheet.id,
                                           insert_sheet_index=dict[2] - 1,
@@ -330,7 +371,7 @@ def add_new_year(wbook, creds, is_new_month):
         prev_sheet_1 = wbook.worksheet(f"Megtakarítás részletező {dates['prev_month'][:-4]}")
         prev_sheet_2 = wbook.worksheet(f"Havi Kiadások {dates['prev_month'][:-4]}")
 
-        dict = find_sheet_by_name(dates['prev_month'], load_json('sheets.jason'))
+        dict = find_sheet_by_name(dates['prev_month'], load_json('sheets.jason')['month'])
 
         new_sheet_1 = wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
                                             insert_sheet_index=dict[2],
@@ -347,7 +388,7 @@ def add_new_year(wbook, creds, is_new_month):
         prev_sheet_1 = wbook.worksheet(f"Megtakarítás részletező {dates['this_month'][:-4]}")
         prev_sheet_2 = wbook.worksheet(f"Havi Kiadások {dates['this_month'][:-4]}")
 
-        dict = find_sheet_by_name(dates['this_month'], load_json('sheets.jason'))
+        dict = find_sheet_by_name(dates['this_month'], load_json('sheets.jason')['month'])
 
         new_sheet_1 = wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
                                             insert_sheet_index=dict[2] - 1,
@@ -397,12 +438,16 @@ if __name__ == '__main__':
     workb, creds = open_spread_sheet('Pénz másolata')
 
     # update_sheet_list('Pénz másolata')
+    kefir = load_json('sheets.jason')['month']
+
     # add_new_month(wbook=workb, creds=creds, is_new_month=True)
     # calc_date()
 
-    sheet = workb.worksheet('Havi Kiadások 2021')
+    # sheet = workb.worksheet('Havi Kiadások 2021')
     # cell = sheet.acell('H2', 'FORMULA')
 
-    insert_row(creds=creds, wbook_id=workb.id, sheet_id=sheet.id, start=4, end=5, inherit_from_before=True)
+    # insert_row(creds=creds, wbook_id=workb.id, sheet_id=sheet.id, start=5, end=6, inherit_from_before=True)
+    # edit_mounthly_costs_sheet(wbook=workb, creds=creds, is_new_month=False, dates=calc_date())
 
+    # calc_date()
     print('gg')
