@@ -71,12 +71,6 @@ if __name__ == '__main__':
           '    A műveletek során hiba esetén kövesd, az ilyen betűtípussal írt javaslatokat!\n'
           '    Ha a javaslatok ellenére sem stimmel valami, szólj nekem, kitalálunk valamit! :)' + ef.rs + fg.rs)
 
-
-    # print(ef.italic + ef.bold + fg.yellow + '- If you want to add a new month, but the program sopped during\n'
-    #                                         '  the procedure, please re-run the program and choose 3 and than 4.' + ef.rs + fg.rs)
-    # print(ef.italic + ef.bold + fg.yellow + '- Choose 5, if the program crases, and there is a "list index out of range"\n'
-    #                                         '  line in the error message.\n' + ef.rs + fg.rs)
-
     sheets_updated, month_added = choose_from_menu()
 
     while True:
