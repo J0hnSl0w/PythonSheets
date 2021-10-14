@@ -1,10 +1,4 @@
-import datetime
-import json
-import gspread
-
-from googleapiclient import discovery
-from oauth2client.service_account import ServiceAccountCredentials
-from sty import *
+from Assets.operators import *
 from Assets.enumerator_dickts import *
 
 
@@ -14,27 +8,6 @@ def init(spreadsheet_name, credentials_file, sheets_file):
     date = calc_date(sheets)
 
     return workb, creds, sheets, date
-
-
-def load_json(json_file):
-    f = open(json_file, 'r')
-    dict = json.load(f)
-
-    return dict
-
-
-def open_spread_sheet(spreadsheet_name: str, credentials_file: str):
-    scope = ['https://www.googleapis.com/auth/drive',
-             'https://www.googleapis.com/auth/drive.file']
-
-    file_name = credentials_file
-    creds = ServiceAccountCredentials.from_json_keyfile_name(file_name, scope)
-    client = gspread.authorize(creds)
-
-    spreadsheet = client.open(spreadsheet_name)
-    print(f'Táblázat megnyitva: {spreadsheet.title}')
-
-    return spreadsheet, creds
 
 
 def update_sheet_list(spreadsheet_name, credentials_file, sheets_json_file):
@@ -58,64 +31,22 @@ def update_sheet_list(spreadsheet_name, credentials_file, sheets_json_file):
 
         if 'template'.lower() in wsheet.title.lower():
             ssheet['templates'][f'{wsheet.title}'] = [wsheet.id, index]
-        elif 'Kiadások' in wsheet.title or 'Megtakarítás' in wsheet.title or \
-                'összesítő' in wsheet.title or 'Rendszeres' in wsheet.title or 'Gyűjtés' in wsheet.title:
-            ssheet['sums'][f'{wsheet.title}'] = [wsheet.id, index]
-        else:
+        elif '.' in wsheet.title:
             ssheet['month'][f'{wsheet.title}'] = [wsheet.id, index]
+        else:
+            ssheet['sums'][f'{wsheet.title}'] = [wsheet.id, index]
 
         percent = (i / l) * 100
 
         if k == 9:
-            print(fg.li_blue + f'kész: {round(percent)}%' + fg.rs)
+            print(fg.li_blue + f'    kész: {round(percent)}%' + fg.rs)
             k = 0
         k += 1
 
     with open(sheets_json_file, 'w') as file:
         json.dump(ssheet, file)
 
-    print(ef.italic + ef.bold + fg.li_blue + f'kész: 100%' + ef.rs + fg.rs)
-
-
-def find_sheet_by_name(name: str, sheet_dict: dict):
-    sheet = []
-
-    for key in sheet_dict:
-        if str(key) == name:
-            sheet.append(name)
-            sheet.append(sheet_dict[key][0])
-            sheet.append(sheet_dict[key][1])
-            break
-
-    return sheet
-
-
-def calc_date(sheets_dict):
-    date_dict = {'prev_month': '',
-                 'this_month': ''}
-
-    for key in sheets_dict['month']:
-        date_dict['prev_month'] = key
-        splitted = key.split('.')
-        splitted_year = int(splitted[0])
-        splitted_month = int(splitted[1])
-
-        if splitted_month < 9:
-            date_dict['this_month'] = splitted[0] + '.0' + str(splitted_month + 1) + '.'
-        elif splitted_month == 12:
-            date_dict['this_month'] = str(splitted_year + 1) + '.0' + str(splitted_month - 11) + '.'
-        else:
-            date_dict['this_month'] = splitted[0] + '.' + str(splitted_month + 1) + '.'
-        break
-
-    tm = date_dict['this_month']
-    iftm = find_sheet_by_name(tm, sheets_dict['month'])
-    if len(iftm) != 0:
-        exeption = ef.italic + ef.bold + fg.yellow +\
-                   'Kérlek, rendezd a napi kiadásokat tartalmazó lapokat balról jobbra növekvő sorrendbe,' \
-                   'indítsd el a programot és válaszd az 5-ös menüpontot!' + fg.rs + ef.rs
-        raise Exception(exeption)
-    return date_dict
+    print(ef.italic + ef.bold + fg.li_blue + f'    kész: 100%' + ef.rs + fg.rs)
 
 
 def edit_mounthly_costs_sheet(wbook, creds, dates):
@@ -143,6 +74,7 @@ def edit_mounthly_costs_sheet(wbook, creds, dates):
     end_col = col[1]
 
     value = f"=SUM(SUMIF('{dates['this_month']}'!$C$4:$C$100;'{sheet_name}'!$A2;'{dates['this_month']}'!$A$4:$A$100))"
+    # TODO kivitelezni, hogy univerzális legyen
 
     repeat_formula_over_range(creds=creds, wbook_id=wbook.id, sheet_id=cost_sheet.id, formula=value,
                               start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
@@ -178,6 +110,7 @@ def edit_savings_sheet(wbook, creds, dates):
     end_col = col[1]
 
     value = f"=SUMIF('{dates['this_month']}'!$D$4:$D$100;'{sheet_name}'!$A2;'{dates['this_month']}'!$A$4:$A$100)*-1"
+    # TODO kivitelezni, hogy univerzális legyen
 
     repeat_formula_over_range(creds=creds, wbook_id=wbook.id, sheet_id=saving_sheet.id, formula=value,
                               start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
@@ -186,86 +119,6 @@ def edit_savings_sheet(wbook, creds, dates):
                    end=col[1])
 
     print('Kész!')
-
-
-def repeat_formula_over_range(creds, wbook_id, sheet_id, formula, start_row, start_col, end_row, end_col):
-    service = discovery.build('sheets', 'v4', credentials=creds)
-
-    requests = {'repeatCell': {
-        "range": {
-            "sheetId": sheet_id,
-            "startRowIndex": start_row,
-            "endRowIndex": end_row,
-            "startColumnIndex": start_col,
-            "endColumnIndex": end_col},
-        "cell": {
-            "userEnteredValue": {
-                "formulaValue": formula}},
-        "fields": 'userEnteredValue'}}
-
-    body = {'requests': [requests]}
-
-    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
-    response = request.execute()
-
-    return response
-
-
-def show_hide_wsheets(creds, wbook_id, sheet_id, is_hidden):
-    service = discovery.build('sheets', 'v4', credentials=creds)
-
-    requests = {'updateSheetProperties': {
-        "properties": {
-            "sheetId": sheet_id,
-            "hidden": is_hidden},
-        "fields": 'hidden'}}
-
-    body = {'requests': [requests]}
-
-    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
-    response = request.execute()
-
-    return response
-
-
-def show_hide_cols(creds, wbook_id, sheet_id, is_hidden, start, end):
-    service = discovery.build('sheets', 'v4', credentials=creds)
-
-    requests = {'updateDimensionProperties': {
-        "range": {
-            "sheetId": sheet_id,
-            "dimension": 'COLUMNS',
-            "startIndex": start,
-            "endIndex": end},
-        "properties": {
-            "hiddenByUser": is_hidden},
-        "fields": 'hiddenByUser'}}
-
-    body = {'requests': [requests]}
-
-    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
-    response = request.execute()
-
-    return response
-
-
-def insert_row(creds, wbook_id, sheet_id, start, end, inherit_from_before):
-    service = discovery.build('sheets', 'v4', credentials=creds)
-
-    requests = {'insertDimension': {
-        "range": {
-            "sheetId": sheet_id,
-            "dimension": 'ROWS',
-            "startIndex": start,
-            "endIndex": end},
-        "inheritFromBefore": inherit_from_before}}
-
-    body = {'requests': [requests]}
-
-    request = service.spreadsheets().batchUpdate(spreadsheetId=wbook_id, body=body)
-    response = request.execute()
-
-    return response
 
 
 def add_new_month(wbook, creds, sheets_dict, dates):
@@ -352,6 +205,7 @@ if __name__ == '__main__':
     spreadsheet_name = 'Pénz másolata'
     credentials_file = 'credentials.json'
     sheets_file = 'sheets.jason'
-    workb, creds, sheets, date = init(spreadsheet_name, credentials_file, sheets_file)
+    # workb, creds, sheets, date = init(spreadsheet_name, credentials_file, sheets_file)
+    update_sheet_list(spreadsheet_name, credentials_file, sheets_file)
 
     print('ggg')
