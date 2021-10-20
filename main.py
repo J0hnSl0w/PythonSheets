@@ -15,14 +15,10 @@ def main_menu(x):
     sheets_updated = False
     month_added = False
     main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                 sheets_file=sheets_file, mc_value=mc_value, sv_value=sv_value, range=range)
+                                 sheets_file=sheets_file, cell_values_dict=cell_values_dict,
+                                 date_row_range=date_row_range)
 
     if x == '1':
-        print(ef.italic + ef.bold + fg.yellow +
-              '    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
-              '    akkor indítsd újra az alkalmazást és válaszd a 3-as, majd a 4-es menüpontot!\n'
-              '    Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, hogy létre jött-e új hónap.\n'
-              '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.' + ef.rs + fg.rs)
         main_sheet.add_new_month()
         month_added = True
 
@@ -49,9 +45,9 @@ if __name__ == '__main__':
     spreadsheet_name = 'Pénz másolata'
     credentials_file = r'Assets/credentials.json'
     sheets_file = r'Assets/sheets.jason'
-    mc_value = "=SUM(SUMIF('{date['this_month']}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date['this_month']}'!$A$4:$A$100))"
-    sv_value = "=SUMIF('{date['this_month']}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date['this_month']}'!$A$4:$A$100)*-1"
-    range = 13
+    cell_values_dict = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
+                        'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1"}
+    date_row_range = 13
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
@@ -81,7 +77,7 @@ if __name__ == '__main__':
                 break
 
         if month_added and not sheets_updated:
-            main_sheet.update_sheet_list()
+            main_menu('5')
 
         if y == 'i':
             sheets_updated, month_added = choose_from_menu()

@@ -3,14 +3,13 @@ from Assets.enumerator_dickts import *
 
 
 class EditSpreadsheet:
-    def __init__(self, spreadsheet_name, credentials_file, sheets_file, mc_value, sv_value, range):
+    def __init__(self, spreadsheet_name, credentials_file, sheets_file, cell_values_dict, date_row_range):
         self.wbook, self.creds = open_spread_sheet(spreadsheet_name, credentials_file)
         self.sheets_file = sheets_file
         self.sheets = load_json(self.sheets_file)
         self.date = calc_date(self.sheets)
-        self.mc_value = mc_value
-        self.sv_value = sv_value
-        self.range = range
+        self.cell_values_dict = cell_values_dict
+        self.date_row_range = date_row_range
 
     def update_sheet_list(self):
         spreadsheet = self.wbook
@@ -74,9 +73,11 @@ class EditSpreadsheet:
         start_col = col[1]-1
         end_col = col[1]
 
+        formula = self.cell_values_dict['mc_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
+
         repeat_formula_over_range(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id,
-                                  formula=self.mc_value.format(date=self.date, sheet_name=sheet_name),
-                                  start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
+                                  formula=formula, start_col=start_col, end_col=end_col,
+                                  start_row=start_row, end_row=end_row)
 
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
@@ -107,9 +108,11 @@ class EditSpreadsheet:
         start_col = col[1] - 1
         end_col = col[1]
 
+        formula = self.cell_values_dict['sv_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
+
         repeat_formula_over_range(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id,
-                                  formula=self.sv_value.format(date=self.date, sheet_name=sheet_name),
-                                  start_col=start_col, end_col=end_col, start_row=start_row, end_row=end_row)
+                                  formula=formula, start_col=start_col, end_col=end_col,
+                                  start_row=start_row, end_row=end_row)
 
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
@@ -117,7 +120,12 @@ class EditSpreadsheet:
         print('Kész!')
 
     def add_new_month(self):
-        print(f'Új hónap hozzádása folyamatban  ...', end='  ')
+        print(f'Új hónap hozzádása folyamatban  ...')
+        print(ef.italic + ef.bold + fg.yellow +
+              '    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
+              '    akkor indítsd újra az alkalmazást és válaszd a 3-as, majd a 4-es menüpontot!\n'
+              '    Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, hogy létre jött-e új hónap.\n'
+              '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.' + ef.rs + fg.rs + '  ... ', end='  ')
 
         template_sheet = self.wbook.worksheet('Template')
         is_new_year = False
@@ -137,7 +145,7 @@ class EditSpreadsheet:
         new_value2 = cell2.value[:31] + self.date['this_month'][:-4] + cell2.value[-5:]
         new_sheet.update('H2', new_value2, raw=False)
 
-        for i in range(self.range):
+        for i in range(self.date_row_range):
             new_sheet.update(f'E{i + 3}', [[f"{self.date['this_month']}01."]], raw=False)
 
         past_year = int(self.date['prev_month'][:-4])
@@ -188,7 +196,6 @@ class EditSpreadsheet:
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_1.id, is_hidden=True)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_2.id, is_hidden=True)
 
-
     def add_new_category(self):
         # TODO implement
         print('Még nincs kész.... :(')
@@ -199,16 +206,20 @@ if __name__ == '__main__':
     spreadsheet_name = 'Pénz másolata'
     credentials_file = 'credentials.json'
     sheets_file = 'sheets.jason'
-    mc_value = "=SUM(SUMIF('{date['this_month']}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date['this_month']}'!$A$4:$A$100))"
-    sv_value = "=SUMIF('{date['this_month']}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date['this_month']}'!$A$4:$A$100)*-1"
+    cell_values_dict = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
+                        'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1"}
+    date_row_range = 13
 
     main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                 sheets_file=sheets_file, mc_value=mc_value, sv_value=sv_value)
+                                 sheets_file=sheets_file, cell_values_dict=cell_values_dict,
+                                 date_row_range=date_row_range)
 
     # workb, creds, sheets, date = init(spreadsheet_name, credentials_file, sheets_file)
     # update_sheet_list(spreadsheet_name, credentials_file, sheets_file
 
     # main_sheet.update_sheet_list()
-    main_sheet.add_new_month()
+    # main_sheet.add_new_month()
+    # main_sheet.edit_savings_sheet()
+    main_sheet.edit_mounthly_costs_sheet()
 
     print('ggg')
