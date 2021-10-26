@@ -14,34 +14,26 @@ def choose_from_menu():
 def main_menu(x):
     sheets_updated = False
     month_added = False
+    main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
+                                 sheets_file=sheets_file, cell_values_dict=cell_values_dict,
+                                 date_row_range=date_row_range)
 
-    if x == '5':
-        update_sheet_list(spreadsheet_name=spreadsheet_name,
-                          credentials_file=credentials_file,
-                          sheets_json_file=sheets_file)
+    if x == '1':
+        main_sheet.add_new_month()
+        month_added = True
+
+    elif x == '2':
+        main_sheet.add_new_category()
+
+    elif x == '3':
+        main_sheet.edit_mounthly_costs_sheet()
+
+    elif x == '4':
+        main_sheet.edit_savings_sheet()
+
+    elif x == '5':
+        main_sheet.update_sheet_list()
         sheets_updated = True
-
-    else:
-        workb, creds, sheets, date = init(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                          sheets_file=sheets_file)
-
-        if x == '1':
-            print(ef.italic + ef.bold + fg.yellow +
-                  '    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
-                  '    akkor indítsd újra az alkalmazást és válaszd a 3-as, majd a 4-es menüpontot!\n'
-                  '    Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, hogy létre jött-e új hónap.\n'
-                  '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.' + ef.rs + fg.rs)
-            add_new_month(wbook=workb, creds=creds, sheets_dict=sheets, dates=date)
-            month_added = True
-
-        elif x == '2':
-            add_new_category()
-
-        elif x == '3':
-            edit_mounthly_costs_sheet(wbook=workb, creds=creds, dates=date)
-
-        elif x == '4':
-            edit_savings_sheet(wbook=workb, creds=creds, dates=date)
 
     return sheets_updated, month_added
 
@@ -53,6 +45,9 @@ if __name__ == '__main__':
     spreadsheet_name = 'Pénz másolata'
     credentials_file = r'Assets/credentials.json'
     sheets_file = r'Assets/sheets.jason'
+    cell_values_dict = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
+                        'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1"}
+    date_row_range = 13
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
@@ -82,9 +77,7 @@ if __name__ == '__main__':
                 break
 
         if month_added and not sheets_updated:
-            update_sheet_list(spreadsheet_name=spreadsheet_name,
-                              credentials_file=credentials_file,
-                              sheets_json_file=sheets_file)
+            main_menu('5')
 
         if y == 'i':
             sheets_updated, month_added = choose_from_menu()
