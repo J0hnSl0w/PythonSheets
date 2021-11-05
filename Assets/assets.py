@@ -196,7 +196,7 @@ class EditSpreadsheet:
 if __name__ == '__main__':
     spreadsheet = 'Pénz másolata'
     credentials = 'credentials.json'
-    sheets = 'sheets.jason'
+    sheets = 'sheets_pm.jason'
 
     main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet, credentials_file=credentials,
                                  sheets_file=sheets)

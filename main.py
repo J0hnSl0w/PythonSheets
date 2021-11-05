@@ -41,12 +41,10 @@ def main_menu(x):
 
 if __name__ == '__main__':
     # spreadsheet_name = 'Pénz'
-    spreadsheet_name = 'Pénz másolata'
+    # spreadsheet_name = 'Pénz másolata'
+    spreadsheet_name = 'Klárka Pénze másolata'
     credentials_file = r'Assets/credentials.json'
-    sheets_file = r'Assets/sheets.jason'
-    cell_values_dict = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
-                        'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1"}
-    date_row_range = 13
+    sheets_file = r'Assets/sheets_kpm.jason'
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
