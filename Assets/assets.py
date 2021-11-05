@@ -133,11 +133,23 @@ class EditSpreadsheet:
                                                insert_sheet_index=dict[2] - 1,
                                                new_sheet_name=self.date['this_month'])
 
-        new_sheet.update(values['starting'][0], values['starting'][1].format(date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['starting_kp'][0], values['starting_kp'][1].format(date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['starting_b'][0], values['starting_b'][1].format(date=self.date['prev_month']), raw=False)
         new_sheet.update(values['bank_account'][0], values['bank_account'][1].format(date=self.date['this_month'][:-4]), raw=False)
 
-        for i in range(values['date'][0]):
-            new_sheet.update(f"{values['date'][1]}{i + values['date'][2]}", [[f"{self.date['this_month']}01."]], raw=False)
+        new_sheet.update(values['savings_1'][0], values['savings_1'][1].format(date=self.date['this_month'][:-4],
+                                                                               date2=self.date['this_month']), raw=False)
+        new_sheet.update(values['savings_2'][0], values['savings_2'][1].format(date=self.date['this_month'][:-4],
+                                                                               date2=self.date['this_month']), raw=False)
+        new_sheet.update(values['savings_3'][0], values['savings_3'][1].format(date=self.date['this_month'][:-4],
+                                                                               date2=self.date['this_month']), raw=False)
+
+        new_sheet.update(values['uribol_1'][0], values['uribol_1'][1].format(date=self.date['this_month'][:-4],
+                                                                             date2=self.date['this_month']), raw=False)
+        new_sheet.update(values['uribol_2'][0], values['uribol_2'][1].format(date=self.date['this_month'][:-4],
+                                                                             date2=self.date['this_month']), raw=False)
+        new_sheet.update(values['uribol_3'][0], values['uribol_3'][1].format(date=self.date['this_month'][:-4],
+                                                                             date2=self.date['this_month']), raw=False)
 
         past_year = int(self.date['prev_month'][:-4])
         year = int(self.date['this_month'][:-4])
@@ -155,7 +167,7 @@ class EditSpreadsheet:
             EditSpreadsheet.add_new_year(self)
 
         else:
-            EditSpreadsheet.edit_savings_sheet(self)
+            # EditSpreadsheet.edit_savings_sheet(self)
             EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
     def add_new_year(self):
@@ -177,7 +189,7 @@ class EditSpreadsheet:
                                                  insert_sheet_index=dict[2] - 2,
                                                  new_sheet_name=f"Havi Kiadások {self.date['this_month'][:-4]}")
 
-        EditSpreadsheet.edit_savings_sheet(self)
+        # EditSpreadsheet.edit_savings_sheet(self)
         EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
         print('Kész!')

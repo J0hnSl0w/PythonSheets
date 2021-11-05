@@ -44,12 +44,12 @@ if __name__ == '__main__':
     # spreadsheet_name = 'Pénz másolata'
     spreadsheet_name = 'Klárka Pénze másolata'
     credentials_file = r'Assets/credentials.json'
-    sheets_file = r'Assets/sheets_kpm.jason'
+    sheets_file = r'Assets/sheets_pm.jason'
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
 
-    print(ef.bold + fg.cyan + '~'*25, ' Üdvözöllek a Táblázat-szerkesztőben JohnSlow! ', '~'*25 + fg.rs + ef.rs)
+    print(ef.bold + fg.cyan + '~'*25, ' Üdvözöllek a Táblázat-szerkesztőben Klárka! ', '~'*25 + fg.rs + ef.rs)
     print('Mit szeretnél csinálni?')
     print(ef.italic + 'Alapműveletek:' + ef.rs)
     print('  1 - Új hónap hozzáadása')
