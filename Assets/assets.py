@@ -3,17 +3,13 @@ from Assets.enumerator_dickts import *
 
 
 class EditSpreadsheet:
-    def __init__(self, spreadsheet_name, credentials_file, sheets_file, cell_values_dict, date_row_range):
+    def __init__(self, spreadsheet_name, credentials_file, sheets_file):
         self.wbook, self.creds = open_spread_sheet(spreadsheet_name, credentials_file)
         self.sheets_file = sheets_file
         self.sheets = load_json(self.sheets_file)
         self.date = calc_date(self.sheets)
-        self.cell_values_dict = cell_values_dict
-        self.date_row_range = date_row_range
 
     def update_sheet_list(self):
-        spreadsheet = self.wbook
-
         ssheet = {'templates': {},
                   'sums': {},
                   'month': {}}
@@ -23,11 +19,11 @@ class EditSpreadsheet:
               '    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 5-ös menüpontot\n'
               '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.' + ef.rs + fg.rs)
 
-        l = len(spreadsheet.worksheets())
+        l = len(self.wbook.worksheets())
         k = 0
 
         for i in range(l):
-            wsheet = spreadsheet.get_worksheet(i)
+            wsheet = self.wbook.get_worksheet(i)
             index = i + 1
 
             if 'template'.lower() in wsheet.title.lower():
@@ -73,7 +69,7 @@ class EditSpreadsheet:
         start_col = col[1]-1
         end_col = col[1]
 
-        formula = self.cell_values_dict['mc_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
+        formula = values['mc_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
 
         repeat_formula_over_range(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id,
                                   formula=formula, start_col=start_col, end_col=end_col,
@@ -108,7 +104,7 @@ class EditSpreadsheet:
         start_col = col[1] - 1
         end_col = col[1]
 
-        formula = self.cell_values_dict['sv_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
+        formula = values['sv_value'].format(date=self.date['this_month'], sheet_name=sheet_name)
 
         repeat_formula_over_range(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id,
                                   formula=formula, start_col=start_col, end_col=end_col,
@@ -137,16 +133,11 @@ class EditSpreadsheet:
                                                insert_sheet_index=dict[2] - 1,
                                                new_sheet_name=self.date['this_month'])
 
-        cell = new_sheet.acell('A3', 'FORMULA')
-        new_value = cell.value[:2] + self.date['prev_month'] + cell.value[-4:]
-        new_sheet.update('A3', new_value, raw=False)
+        new_sheet.update(values['starting'][0], values['starting'][1].format(date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['bank_account'][0], values['bank_account'][1].format(date=self.date['this_month'][:-4]), raw=False)
 
-        cell2 = new_sheet.acell('H2', 'FORMULA')
-        new_value2 = cell2.value[:31] + self.date['this_month'][:-4] + cell2.value[-5:]
-        new_sheet.update('H2', new_value2, raw=False)
-
-        for i in range(self.date_row_range):
-            new_sheet.update(f'E{i + 3}', [[f"{self.date['this_month']}01."]], raw=False)
+        for i in range(values['date'][0]):
+            new_sheet.update(f"{values['date'][1]}{i + values['date'][2]}", [[f"{self.date['this_month']}01."]], raw=False)
 
         past_year = int(self.date['prev_month'][:-4])
         year = int(self.date['this_month'][:-4])
@@ -203,23 +194,16 @@ class EditSpreadsheet:
 
 
 if __name__ == '__main__':
-    spreadsheet_name = 'Pénz másolata'
-    credentials_file = 'credentials.json'
-    sheets_file = 'sheets.jason'
-    cell_values_dict = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
-                        'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1"}
-    date_row_range = 13
+    spreadsheet = 'Pénz másolata'
+    credentials = 'credentials.json'
+    sheets = 'sheets.jason'
 
-    main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                 sheets_file=sheets_file, cell_values_dict=cell_values_dict,
-                                 date_row_range=date_row_range)
-
-    # workb, creds, sheets, date = init(spreadsheet_name, credentials_file, sheets_file)
-    # update_sheet_list(spreadsheet_name, credentials_file, sheets_file
+    main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet, credentials_file=credentials,
+                                 sheets_file=sheets)
 
     # main_sheet.update_sheet_list()
-    # main_sheet.add_new_month()
+    main_sheet.add_new_month()
     # main_sheet.edit_savings_sheet()
-    main_sheet.edit_mounthly_costs_sheet()
+    # main_sheet.edit_mounthly_costs_sheet()
 
     print('ggg')

@@ -15,8 +15,7 @@ def main_menu(x):
     sheets_updated = False
     month_added = False
     main_sheet = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                 sheets_file=sheets_file, cell_values_dict=cell_values_dict,
-                                 date_row_range=date_row_range)
+                                 sheets_file=sheets_file)
 
     if x == '1':
         main_sheet.add_new_month()
