@@ -40,9 +40,9 @@ def main_menu(x):
 
 
 if __name__ == '__main__':
-    spreadsheet_name = 'Klárka Pénze másolata'
+    spreadsheet_name = 'Klárka Pénze'
     credentials_file = r'Assets/credentials.json'
-    sheets_file = r'Assets/sheets_pm.jason'
+    sheets_file = r'Assets/sheets_p.jason'
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
