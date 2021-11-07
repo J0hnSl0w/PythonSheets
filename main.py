@@ -27,10 +27,10 @@ def main_menu(x):
     elif x == '3':
         main_sheet.edit_mounthly_costs_sheet()
 
-    elif x == '4':
-        main_sheet.edit_savings_sheet()
+    # elif x == '4':
+    #     main_sheet.edit_savings_sheet()
 
-    elif x == '5':
+    elif x == '4':
         main_sheet.update_sheet_list()
         sheets_updated = True
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     credentials_file = r'Assets/credentials.json'
     sheets_file = r'Assets/sheets_p.jason'
 
-    menu = ['1', '2', '3', '4', '5']
+    menu = ['1', '2', '3', '4']
     yn = ['i', 'n']
 
     print(ef.bold + fg.cyan + '~'*25, ' Üdvözöllek a Táblázat-szerkesztőben Klárka! ', '~'*25 + fg.rs + ef.rs)
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     print('  2 - Új kategória hozzáadása\n')
     print(ef.italic + 'Hiba elhárításához szükséges műveletek:' + ef.rs)
     print('  3 - A kiadások összesítő táblázatának frissítése')
-    print('  4 - A megtakarításokat összesítő táblázat frissítése')
-    print('  5 - A lapok adatait tartalmazó fájl frissítése')
+    # print('  4 - A megtakarításokat összesítő táblázat frissítése')
+    print('  4 - A lapok adatait tartalmazó fájl frissítése')
     print(ef.italic + ef.bold + fg.yellow +
           '    Ezeket csak akkor kell használni, ha a program futása közben valamilyen hibaüzenet jön elő.\n'
           '    A műveletek során hiba esetén kövesd, az ilyen betűtípussal írt javaslatokat!\n'
