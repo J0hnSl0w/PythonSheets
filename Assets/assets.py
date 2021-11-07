@@ -132,22 +132,20 @@ class EditSpreadsheet:
         new_sheet = self.wbook.duplicate_sheet(source_sheet_id=template_sheet.id,
                                                insert_sheet_index=dict[2] - 1,
                                                new_sheet_name=self.date['this_month'])
-        prev = self.date['prev_month'][:-4]
-        prev2 = self.date['prev_month']
-        this = self.date['this_month'][:-4]
-        this2 = self.date['this_month']
+        prev_date = self.date['prev_month']
+        year = self.date['this_month'][:-4]
+        date = self.date['this_month']
 
-        new_sheet.update(values['starting_kp'][0], values['starting_kp'][1].format(date=prev2), raw=False)
-        new_sheet.update(values['starting_b'][0], values['starting_b'][1].format(date=prev2), raw=False)
-        new_sheet.update(values['bank_account'][0], values['bank_account'][1].format(date=prev2), raw=False)
+        new_sheet.update(values['starting_kp'][0], values['starting_kp'][1].format(prev_date=prev_date), raw=False)
+        new_sheet.update(values['starting_b'][0], values['starting_b'][1].format(prev_date=prev_date), raw=False)
 
-        new_sheet.update(values['savings_1'][0], values['savings_1'][1].format(date=this, date2=this2), raw=False)
-        new_sheet.update(values['savings_2'][0], values['savings_2'][1].format(date=this, date2=this2), raw=False)
-        new_sheet.update(values['savings_3'][0], values['savings_3'][1].format(date=prev2), raw=False)
+        new_sheet.update(values['savings_1'][0], values['savings_1'][1].format(date=date, year=year), raw=False)
+        new_sheet.update(values['savings_2'][0], values['savings_2'][1].format(date=date, year=year), raw=False)
+        new_sheet.update(values['savings_3'][0], values['savings_3'][1].format(prev_date=prev_date), raw=False)
 
-        new_sheet.update(values['uribol_1'][0], values['uribol_1'][1].format(date=this, date2=this2), raw=False)
-        new_sheet.update(values['uribol_2'][0], values['uribol_2'][1].format(date=this, date2=this2), raw=False)
-        new_sheet.update(values['uribol_3'][0], values['uribol_3'][1].format(date=prev2), raw=False)
+        new_sheet.update(values['uribol_1'][0], values['uribol_1'][1].format(date=date, year=year), raw=False)
+        new_sheet.update(values['uribol_2'][0], values['uribol_2'][1].format(date=date, year=year), raw=False)
+        new_sheet.update(values['uribol_3'][0], values['uribol_3'][1].format(prev_date=prev_date), raw=False)
 
         past_year = int(self.date['prev_month'][:-4])
         year = int(self.date['this_month'][:-4])
