@@ -11,8 +11,9 @@ mounthly_columns = {'01.': ['B', 2],
                     '11.': ['L', 12],
                     '12.': ['L', 13]}
 
-values = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100))",
-          'sv_value': "=SUMIF('{date}'!$D$4:$D$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100)*-1",
-          'starting': ['A3', "='{date}'!A2"],
+values = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'{sheet_name}'!$A2;'{date}'!$E$4:$E$100))",
+          'starting_otp': ['A3', "='{date}'!A2"],
+          'starting_erste': ['E3', "='{date}'!E2"],
           'bank_account': ['H2', "=$A$2+'Megtakarítás részletező {date}'!N38"],
-          'date': [13, 'E', 3]}
+          'date': [13, 'E', 3]
+}

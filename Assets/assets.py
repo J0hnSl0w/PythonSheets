@@ -155,7 +155,7 @@ class EditSpreadsheet:
             EditSpreadsheet.add_new_year(self)
 
         else:
-            EditSpreadsheet.edit_savings_sheet(self)
+            # EditSpreadsheet.edit_savings_sheet(self)
             EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
     def add_new_year(self):
@@ -177,7 +177,7 @@ class EditSpreadsheet:
                                                  insert_sheet_index=dict[2] - 2,
                                                  new_sheet_name=f"Havi Kiadások {self.date['this_month'][:-4]}")
 
-        EditSpreadsheet.edit_savings_sheet(self)
+        # EditSpreadsheet.edit_savings_sheet(self)
         EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
         print('Kész!')
@@ -194,7 +194,7 @@ class EditSpreadsheet:
 
 
 if __name__ == '__main__':
-    spreadsheet = 'Pénz másolata'
+    spreadsheet = 'Sir Manó Pénze másolata'
     credentials = 'credentials.json'
     sheets = 'sheets_pm.jason'
 
