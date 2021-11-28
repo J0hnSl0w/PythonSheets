@@ -40,11 +40,10 @@ def main_menu(x):
 
 
 if __name__ == '__main__':
-    # spreadsheet_name = 'Pénz'
+    spreadsheet_name = 'Pénz'
     # spreadsheet_name = 'Pénz másolata'
-    spreadsheet_name = 'Klárka Pénze másolata'
     credentials_file = r'Assets/credentials.json'
-    sheets_file = r'Assets/sheets_kpm.jason'
+    sheets_file = r'Assets/sheets_p.jason'
 
     menu = ['1', '2', '3', '4', '5']
     yn = ['i', 'n']
