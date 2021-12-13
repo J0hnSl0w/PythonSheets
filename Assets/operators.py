@@ -1,7 +1,6 @@
 import json
 import gspread
 
-from sty import *
 from googleapiclient import discovery
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -48,9 +47,8 @@ def calc_date(sheets_dict):
     tm = date_dict['this_month']
     iftm = find_sheet_by_name(tm, sheets_dict['month'])
     if len(iftm) != 0:
-        exeption = ef.italic + ef.bold + fg.yellow +\
-                   'Kérlek, rendezd a napi kiadásokat tartalmazó lapokat balról jobbra növekvő sorrendbe,' \
-                   'indítsd el a programot és válaszd az 5-ös menüpontot!' + fg.rs + ef.rs
+        exeption = 'Kérlek, rendezd a napi kiadásokat tartalmazó lapokat balról jobbra növekvő sorrendbe, ' \
+                   'indítsd el a programot és válaszd az 5-ös menüpontot!'
         raise Exception(exeption)
     return date_dict
 

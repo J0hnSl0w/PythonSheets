@@ -14,10 +14,9 @@ class EditSpreadsheet:
                   'sums': {},
                   'month': {}}
 
-        print(ef.italic + ef.bold + fg.li_blue + 'A lapok adatait tartalmazó fájl frissítése, kérlek várj  ...' + ef.rs + fg.rs)
-        print(ef.italic + ef.bold + fg.yellow +
-              '    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 5-ös menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.' + ef.rs + fg.rs)
+        print('A lapok adatait tartalmazó fájl frissítése, kérlek várj  ...')
+        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 5-ös menüpontot\n'
+              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.')
 
         l = len(self.wbook.worksheets())
         k = 0
@@ -36,14 +35,14 @@ class EditSpreadsheet:
             percent = (i / l) * 100
 
             if k == 9:
-                print(fg.li_blue + f'    kész: {round(percent)}%' + fg.rs)
+                print(f'    {round(percent)}%')
                 k = 0
             k += 1
 
         with open(self.sheets_file, 'w') as file:
             json.dump(ssheet, file)
 
-        print(ef.italic + ef.bold + fg.li_blue + f'    kész: 100%' + ef.rs + fg.rs)
+        print('    100% -- Kész!')
 
     def edit_mounthly_costs_sheet(self):
         year = self.date['this_month'][:-4]
@@ -52,9 +51,8 @@ class EditSpreadsheet:
         count = cost_sheet.acell('A1').numeric_value
 
         print(f'A ({cost_sheet.title}) táblázat frissítése  ...')
-        print(ef.italic + ef.bold + fg.yellow +
-              '    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 3-as, majd a 4-es menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.' + ef.rs + fg.rs + '  ... ', end='  ')
+        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 3-as, majd a 4-es menüpontot\n'
+              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.  ... ', end='  ')
 
         col = None
         key_value = self.date['this_month'][-3:]
@@ -87,9 +85,8 @@ class EditSpreadsheet:
         count = saving_sheet.acell('A1').numeric_value
 
         print(f'A ({saving_sheet.title}) táblázat szerkesztése  ...')
-        print(ef.italic + ef.bold + fg.yellow +
-              '    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 4-es menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.' + ef.rs + fg.rs + '  ... ', end='  ')
+        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 4-es menüpontot\n'
+              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.  ... ', end='  ')
 
         col = None
         key_value = self.date['this_month'][-3:]
@@ -117,11 +114,10 @@ class EditSpreadsheet:
 
     def add_new_month(self):
         print(f'Új hónap hozzádása folyamatban  ...')
-        print(ef.italic + ef.bold + fg.yellow +
-              '    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
+        print('    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
               '    akkor indítsd újra az alkalmazást és válaszd a 3-as, majd a 4-es menüpontot!\n'
               '    Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, hogy létre jött-e új hónap.\n'
-              '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.' + ef.rs + fg.rs + '  ... ', end='  ')
+              '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.  ... ', end='  ')
 
         template_sheet = self.wbook.worksheet('Template')
         is_new_year = False
