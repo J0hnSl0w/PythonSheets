@@ -11,4 +11,5 @@ if __name__ == '__main__':
                                  sheets_file=sheets_file)
 
     window = start_gui(table)
+    print('Viszlát!')
 
