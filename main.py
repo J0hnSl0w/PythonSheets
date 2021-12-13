@@ -8,6 +8,9 @@ if __name__ == '__main__':
     credentials_file = r'Assets/credentials.json'
     sheets_file = r'Assets/sheets_pm.jason'
 
+    # TODO printeket megcsinálni külön
+    # TODO guit kiszépíteni
+
     table = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
                                  sheets_file=sheets_file)
 
