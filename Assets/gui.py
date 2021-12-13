@@ -5,13 +5,13 @@ text_spec = {'bg': 'black',
              'fg': 'white',
              'width': 50,
              'height': 2,
-             'font_c1': ('Sans 15 bold'),
-             'font_c2': ('Sans 12')}
+             'font_c1': 'Sans 15 bold',
+             'font_c2': 'Sans 12'}
 buttons_spec = {'bg': 'grey',
                 'fg': 'black',
                 'widht': 30,
                 'height': 2,
-                'font': ('Sans 10')}
+                'font': 'Sans 10'}
 
 main_window = tk.Tk(className='Táblázat szerkesztő')
 main_window.configure(bg='black')
