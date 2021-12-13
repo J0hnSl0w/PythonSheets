@@ -74,6 +74,14 @@ def start_gui(table):
                          font=buttons_spec['font'],
                          command=table.update_sheet_list)
 
+    button_quit = tk.Button(text="Kilépés",
+                            width=buttons_spec['widht'],
+                            height=buttons_spec['height'],
+                            bg=buttons_spec['bg'],
+                            fg=buttons_spec['fg'],
+                            font=buttons_spec['font'],
+                            command=main_window.destroy)
+
     greetings_0.grid(row=0, column=0)
     greetings_1.grid(row=1, column=0, sticky='s')
     button_0.grid(row=2, column=0, pady=5)
@@ -81,5 +89,6 @@ def start_gui(table):
     button_2.grid(row=4, column=0, pady=5)
     button_3.grid(row=5, column=0, pady=5)
     button_4.grid(row=6, column=0, pady=5)
+    button_quit.grid(row=7, column=0, pady=5)
 
     main_window.mainloop()
