@@ -147,6 +147,8 @@ class EditSpreadsheet:
             EditSpreadsheet.edit_savings_sheet(self)
             EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
+        EditSpreadsheet.update_sheet_list(self)
+
     def add_new_year(self):
         module_logger.info(f'Új év hozzáadása  ...')
 
