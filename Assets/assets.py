@@ -1,10 +1,11 @@
 from Assets.operators import *
 from Assets.enumerator_dickts import *
+from Assets.logger import *
 
 
 class EditSpreadsheet:
     def __init__(self, spreadsheet_name, credentials_file, sheets_file):
-        self.wbook, self.creds = open_spread_sheet(spreadsheet_name, credentials_file)
+        self.wbook, self.creds, self.feedback = open_spread_sheet(spreadsheet_name, credentials_file)
         self.sheets_file = sheets_file
         self.sheets = load_json(self.sheets_file)
         self.date = calc_date(self.sheets)
@@ -14,9 +15,7 @@ class EditSpreadsheet:
                   'sums': {},
                   'month': {}}
 
-        print('A lapok adatait tartalmazó fájl frissítése, kérlek várj  ...')
-        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 5-ös menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.')
+        module_logger.info(prints['update_sheet_list'])
 
         l = len(self.wbook.worksheets())
         k = 0
@@ -35,14 +34,14 @@ class EditSpreadsheet:
             percent = (i / l) * 100
 
             if k == 9:
-                print(f'    {round(percent)}%')
+                module_logger.info(f'    {round(percent)}%')
                 k = 0
             k += 1
 
         with open(self.sheets_file, 'w') as file:
             json.dump(ssheet, file)
 
-        print('    100% -- Kész!')
+        module_logger.info('    100% -- Kész!\n')
 
     def edit_mounthly_costs_sheet(self):
         year = self.date['this_month'][:-4]
@@ -50,9 +49,8 @@ class EditSpreadsheet:
         cost_sheet = self.wbook.worksheet(sheet_name)
         count = cost_sheet.acell('A1').numeric_value
 
-        print(f'A ({cost_sheet.title}) táblázat frissítése  ...')
-        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 3-as, majd a 4-es menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.  ... ', end='  ')
+        module_logger.info(f'A ({cost_sheet.title}) táblázat frissítése  ...')
+        module_logger.info(prints['edit_mounthly_costs_sheet'])
 
         col = None
         key_value = self.date['this_month'][-3:]
@@ -76,7 +74,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        print('Kész!')
+        module_logger.info('Kész!\n')
 
     def edit_savings_sheet(self):
         year = self.date['this_month'][:-4]
@@ -84,9 +82,8 @@ class EditSpreadsheet:
         saving_sheet = self.wbook.worksheet(sheet_name)
         count = saving_sheet.acell('A1').numeric_value
 
-        print(f'A ({saving_sheet.title}) táblázat szerkesztése  ...')
-        print('    Ha ezen folyamat közben történik valami, indítsd el újra a programot, és válaszd az 4-es menüpontot\n'
-              '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.  ... ', end='  ')
+        module_logger.info(f'A ({saving_sheet.title}) táblázat szerkesztése  ...')
+        module_logger.info(prints['edit_savings_sheet'])
 
         col = None
         key_value = self.date['this_month'][-3:]
@@ -110,14 +107,10 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        print('Kész!')
+        module_logger.info('Kész!\n')
 
     def add_new_month(self):
-        print(f'Új hónap hozzádása folyamatban  ...')
-        print('    Ha a program sikeresen hozzáadta az új hónapot, de utána leáll,\n'
-              '    akkor indítsd újra az alkalmazást és válaszd a 3-as, majd a 4-es menüpontot!\n'
-              '    Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, hogy létre jött-e új hónap.\n'
-              '    Ha igen, töröld ki és indítsd el újra a programot. Lehet hogy várni kell 1 percet.  ... ', end='  ')
+        module_logger.info(prints['edit_new_month'])
 
         template_sheet = self.wbook.worksheet('Template')
         is_new_year = False
@@ -143,7 +136,7 @@ class EditSpreadsheet:
 
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet.id, is_hidden=True)
 
-        print(f'Kész!  Az új lap neve: {new_sheet.title}')
+        module_logger.info(f'Kész!  Az új lap neve: {new_sheet.title}\n')
 
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet.id, is_hidden=False)
 
@@ -155,7 +148,7 @@ class EditSpreadsheet:
             EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
     def add_new_year(self):
-        print(f'Új év hozzáadása  ...')
+        module_logger.info(f'Új év hozzáadása  ...')
 
         template_sheet_1 = self.wbook.worksheet('Megtakarítás részletező template')
         template_sheet_2 = self.wbook.worksheet('Havi Kiadások Template')
@@ -185,8 +178,7 @@ class EditSpreadsheet:
 
     def add_new_category(self):
         # TODO implement
-        print('Még nincs kész.... :(')
-        pass
+        module_logger.info('Még nincs kész.... :(\n')
 
 
 if __name__ == '__main__':

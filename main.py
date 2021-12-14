@@ -1,6 +1,7 @@
 from time import sleep
-from Assets.assets import *
+
 from Assets.gui import *
+from Assets.logger import *
 
 if __name__ == '__main__':
     # spreadsheet_name = 'Pénz'
@@ -11,10 +12,22 @@ if __name__ == '__main__':
     # TODO printeket megcsinálni külön
     # TODO guit kiszépíteni
 
-    table = EditSpreadsheet(spreadsheet_name=spreadsheet_name, credentials_file=credentials_file,
-                                 sheets_file=sheets_file)
+    table = EditSpreadsheet(spreadsheet_name=spreadsheet_name,
+                            credentials_file=credentials_file,
+                            sheets_file=sheets_file)
 
-    window = start_gui(table)
-    print('Viszlát!')
-    sleep(2)
+    app = MainWindow(None, table)
+    app.title('Táblázat szerkesztő')
+    app.configure(bg='black')
+    app.resizable(width=False, height=False)
+
+    stderrHandler = logging.StreamHandler()
+    module_logger.addHandler(stderrHandler)
+    guiHandler = HandlerFeedback(app.logger)
+    module_logger.addHandler(guiHandler)
+    module_logger.setLevel(logging.INFO)
+
+    module_logger.info(table.feedback)
+
+    app.mainloop()
 
