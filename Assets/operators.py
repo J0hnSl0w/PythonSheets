@@ -1,7 +1,6 @@
 import json
 import gspread
-
-from sty import *
+from Assets.enumerator_dickts import prints
 from googleapiclient import discovery
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -15,9 +14,10 @@ def open_spread_sheet(spreadsheet_name: str, credentials_file: str):
     client = gspread.authorize(creds)
 
     spreadsheet = client.open(spreadsheet_name)
-    print(f'Táblázat megnyitva: {spreadsheet.title}')
 
-    return spreadsheet, creds
+    feedback = f'Táblázat megnyitva: {spreadsheet.title}\n'
+
+    return spreadsheet, creds, feedback
 
 
 def load_json(json_file):
@@ -48,10 +48,7 @@ def calc_date(sheets_dict):
     tm = date_dict['this_month']
     iftm = find_sheet_by_name(tm, sheets_dict['month'])
     if len(iftm) != 0:
-        exeption = ef.italic + ef.bold + fg.yellow +\
-                   'Kérlek, rendezd a napi kiadásokat tartalmazó lapokat balról jobbra növekvő sorrendbe,' \
-                   'indítsd el a programot és válaszd az 5-ös menüpontot!' + fg.rs + ef.rs
-        raise Exception(exeption)
+        raise Exception(prints['calc_date_exception'])
     return date_dict
 
 
