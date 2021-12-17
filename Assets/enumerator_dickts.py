@@ -23,13 +23,20 @@ values = {
     'uribol_3': ['K9', "=SUM(K2:K3)+'{prev_date}'!K9"],
 }
 
-buttons_spec = {'bg': 'grey',
+text_spec = {'bg': '#35455D',
+             'fg': '#BFD1DF',
+             'width': 50,
+             'height': 2,
+             'font_c1': 'Sans 15 bold',
+             'font_c2': 'Sans 12'}
+
+buttons_spec = {'bg': '#92B1B6',
                 'fg': 'black',
                 'widht': 30,
                 'height': 2,
                 'font': 'Sans 10'}
 
-frame_spec = {'bg': 'black'}
+frame_spec = {'bg': '#35455D'}
 
 logger_spec = {'state': 'disabled',
                'width': 80,

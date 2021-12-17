@@ -160,17 +160,17 @@ class EditSpreadsheet:
     def add_new_year(self):
         module_logger.info(f'Új év hozzáadása  ...')
 
-        template_sheet_1 = self.wbook.worksheet('Megtakarítás részletező template')
+        # template_sheet_1 = self.wbook.worksheet('Megtakarítás részletező template')
         template_sheet_2 = self.wbook.worksheet('Havi Kiadások Template')
 
-        prev_sheet_1 = self.wbook.worksheet(f"Megtakarítás részletező {self.date['prev_month'][:-4]}")
+        # prev_sheet_1 = self.wbook.worksheet(f"Megtakarítás részletező {self.date['prev_month'][:-4]}")
         prev_sheet_2 = self.wbook.worksheet(f"Havi Kiadások {self.date['prev_month'][:-4]}")
 
         dict = find_sheet_by_name(self.date['prev_month'], self.sheets['month'])
 
-        new_sheet_1 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
-                                                 insert_sheet_index=dict[2] - 3,
-                                                 new_sheet_name=f"Megtakarítás részletező {self.date['this_month'][:-4]}")
+        # new_sheet_1 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
+        #                                          insert_sheet_index=dict[2] - 3,
+        #                                          new_sheet_name=f"Megtakarítás részletező {self.date['this_month'][:-4]}")
 
         new_sheet_2 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_2.id,
                                                  insert_sheet_index=dict[2] - 2,
@@ -181,9 +181,9 @@ class EditSpreadsheet:
 
         print('Kész!')
 
-        show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_1.id, is_hidden=False)
+        # show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_1.id, is_hidden=False)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_2.id, is_hidden=False)
-        show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_1.id, is_hidden=True)
+        # show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_1.id, is_hidden=True)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_2.id, is_hidden=True)
 
     def add_new_category(self):

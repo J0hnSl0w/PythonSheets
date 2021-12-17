@@ -1,14 +1,13 @@
-from Assets.assets import *
-from Assets.logger import *
+from Assets.gui import *
 
 if __name__ == '__main__':
-    table_info = {'spreadsheet_name': 'Klárka Pénze',
+    table_info = {'spreadsheet_name': 'Klárka Pénze másolata',
                   'credentials_file': r'Assets/credentials.json',
-                  'sheets_file': r'Assets/sheets_p.jason'}
+                  'sheets_file': r'Assets/sheets_pm.jason'}
 
     app = MainWindow(None, table_info)
     app.title('Táblázat szerkesztő')
-    app.configure(bg='black')
+    app.configure(bg='#35455D')
     app.resizable(width=False, height=False)
 
     stderrHandler = logging.StreamHandler()
