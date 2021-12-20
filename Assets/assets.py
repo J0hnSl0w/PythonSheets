@@ -74,7 +74,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        module_logger.info('Kész!\n')
+        module_logger.info('Havi összesítő frissítve!\n')
 
     def edit_savings_sheet(self):
         year = self.date['this_month'][:-4]
@@ -107,7 +107,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        module_logger.info('Kész!\n')
+        module_logger.info('Megtakarítás összegző frissítve!\n')
 
     def add_new_month(self):
         module_logger.info(prints['edit_new_month'])
@@ -122,11 +122,21 @@ class EditSpreadsheet:
                                                insert_sheet_index=dict[2] - 1,
                                                new_sheet_name=self.date['this_month'])
 
-        new_sheet.update(values['starting'][0], values['starting'][1].format(date=self.date['prev_month']), raw=False)
-        new_sheet.update(values['bank_account'][0], values['bank_account'][1].format(date=self.date['this_month'][:-4]), raw=False)
+        new_sheet.update(values['starting_otp'][0], values['starting_otp'][1].format(prev_date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['starting_erste'][0], values['starting_erste'][1].format(prev_date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['savsum_erste'][0], values['savsum_erste'][1].format(prev_date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['savsum_otp'][0], values['savsum_otp'][1].format(prev_date=self.date['prev_month']), raw=False)
+        new_sheet.update(values['rensum_otp'][0], values['rensum_otp'][1].format(date=self.date['this_month'],
+                                                                                 prev_date=self.date['prev_month'],
+                                                                                 sheet_name=f'Havi Kiadások {self.date["this_month"][:-4]}'),
+                         raw=False)
+        new_sheet.update(values['rensum_erste'][0], values['rensum_erste'][1].format(date=self.date['this_month'],
+                                                                                     prev_date=self.date['prev_month'],
+                                                                                     sheet_name=f'Havi Kiadások {self.date["this_month"][:-4]}'),
+                         raw=False)
 
         for i in range(values['date'][0]):
-            new_sheet.update(f"{values['date'][1]}{i + values['date'][2]}", [[f"{self.date['this_month']}01."]], raw=False)
+            new_sheet.update(f"{values['date'][1]}{i + values['date'][2]}", f"{self.date['this_month']}01.", raw=False)
 
         past_year = int(self.date['prev_month'][:-4])
         year = int(self.date['this_month'][:-4])
@@ -144,7 +154,7 @@ class EditSpreadsheet:
             EditSpreadsheet.add_new_year(self)
 
         else:
-            EditSpreadsheet.edit_savings_sheet(self)
+            # EditSpreadsheet.edit_savings_sheet(self)
             EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
         EditSpreadsheet.update_sheet_list(self)
@@ -152,30 +162,30 @@ class EditSpreadsheet:
     def add_new_year(self):
         module_logger.info(f'Új év hozzáadása  ...')
 
-        template_sheet_1 = self.wbook.worksheet('Megtakarítás részletező template')
+        # template_sheet_1 = self.wbook.worksheet('Megtakarítás részletező template')
         template_sheet_2 = self.wbook.worksheet('Havi Kiadások Template')
 
-        prev_sheet_1 = self.wbook.worksheet(f"Megtakarítás részletező {self.date['prev_month'][:-4]}")
+        # prev_sheet_1 = self.wbook.worksheet(f"Megtakarítás részletező {self.date['prev_month'][:-4]}")
         prev_sheet_2 = self.wbook.worksheet(f"Havi Kiadások {self.date['prev_month'][:-4]}")
 
         dict = find_sheet_by_name(self.date['prev_month'], self.sheets['month'])
 
-        new_sheet_1 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
-                                                 insert_sheet_index=dict[2] - 3,
-                                                 new_sheet_name=f"Megtakarítás részletező {self.date['this_month'][:-4]}")
+        # new_sheet_1 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_1.id,
+        #                                          insert_sheet_index=dict[2] - 3,
+        #                                          new_sheet_name=f"Megtakarítás részletező {self.date['this_month'][:-4]}")
 
         new_sheet_2 = self.wbook.duplicate_sheet(source_sheet_id=template_sheet_2.id,
                                                  insert_sheet_index=dict[2] - 2,
                                                  new_sheet_name=f"Havi Kiadások {self.date['this_month'][:-4]}")
 
-        EditSpreadsheet.edit_savings_sheet(self)
+        # EditSpreadsheet.edit_savings_sheet(self)
         EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
-        print('Kész!')
+        module_logger.info('Új év hozzáadva!\n')
 
-        show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_1.id, is_hidden=False)
+        # show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_1.id, is_hidden=False)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_2.id, is_hidden=False)
-        show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_1.id, is_hidden=True)
+        # show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_1.id, is_hidden=True)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=prev_sheet_2.id, is_hidden=True)
 
     def add_new_category(self):
