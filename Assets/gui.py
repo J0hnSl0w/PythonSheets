@@ -154,6 +154,9 @@ class MainWindow(tk.Tk):
         except APIError as err:
             if err.response.status_code == 429:
                 self.__sleeper(10)
+            elif err.response.status_code == 400:
+                err_splitted = err.args[0]['message'].split('"')
+                module_logger.info(f'Ez a hónap már létezik: {err_splitted[1]} Próbáld újra a fentiek alapján.')
             else:
                 raise
 
