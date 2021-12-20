@@ -19,3 +19,44 @@ values = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date
           'rensum_otp': ['K20', "=-(SUMIF('{date}'!$C$4:$C$102;'{sheet_name}'!$A$7;'{date}'!$A$4:$A$102))+'{prev_date}'!K20"],
           'rensum_erste': ['K21', "=-(SUMIF('{date}'!$G$4:$G$101;'{sheet_name}'!$A$7;'{date}'!$E$4:$E$101))+'{prev_date}'!K21"]
           }
+
+text_spec = {'bg': 'black',
+             'fg': 'white',
+             'width': 50,
+             'height': 2,
+             'font_c1': 'Sans 15 bold',
+             'font_c2': 'Sans 12'}
+
+buttons_spec = {'bg': 'grey',
+                'fg': 'black',
+                'widht': 30,
+                'height': 2,
+                'font': 'Sans 10'}
+
+frame_spec = {'bg': 'black'}
+
+logger_spec = {'state': 'disabled',
+               'width': 80,
+               'height': 10}
+
+prints = {'calc_date_exception': 'Kérlek, rendezd a napi kiadásokat tartalmazó lapokat balról jobbra\n'
+                                 'növekvő sorrendbe, és válaszd a "Táblázat adatok frissítése" gombot!\n',
+          'update_sheet_list': 'A lapok adatait tartalmazó fájl frissítése, kérlek várj  ...\n'
+                               '    Ha ezen folyamat közben történik valami, indítsd el újra a programot,\n'
+                               '    és válaszd az "Táblázat adatok frissítése" gombot.\n'
+                               '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.\n',
+          'edit_mounthly_costs_sheet': '    Ha ezen folyamat közben történik valami, indítsd el újra a programot,\n'
+                                       '    és válaszd a "Kiadás összesítő frissítése", majd a \n'
+                                       '                 "Megtakarítás összesítő frissítése" gombokat.\n'
+                                       '    Lehetséges, hogy csak 1 perc várakozás után fog \n'
+                                       '    újra működni a program.\n',
+          'edit_savings_sheet': '    Ha ezen folyamat közben történik valami, válaszd a \n'
+                                '               "Megtakarítás összesítő frissítése" gombot.\n'
+                                '    Lehetséges, hogy csak 1 perc várakozás után fog újra működni a program.\n',
+          'edit_new_month': 'Új hónap hozzádása folyamatban  ...\n'
+                            '  - Ha a program sikeresen hozzáadta az új hónapot, de utána hiba üzenetet küld,\n'
+                            '      várj egy percet és válaszd a "Kiadás összesítő frissítése", majd a \n'
+                            '                                   "Megtakarítás összesítő frissítése" gombokat.\n'
+                            '   - Ha nem tudta végigcsinálni ezt a folyamatot, nézd meg az interneten, \n'
+                            '     hogy létre jött-e új hónap. Ha igen, töröld ki és add hozzá újra a honapot.\n'
+                            '   Lehet hogy várni kell 1 percet.\n'}
