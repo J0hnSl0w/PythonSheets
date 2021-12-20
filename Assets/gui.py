@@ -20,7 +20,7 @@ class MainWindow(tk.Tk):
         self.frame_4 = tk.Frame(parent, bg=frame_spec['bg'])
 
         self.greetings_0 = tk.Label(master=self.frame_1,
-                                    text='Üdvözöllek a Táblázat szerkesztőben JohnSlow!',
+                                    text='Üdvözöllek a Táblázat szerkesztőben Sir Manó!',
                                     fg=text_spec['fg'],
                                     bg=text_spec['bg'],
                                     width=text_spec['width'],
@@ -67,13 +67,13 @@ class MainWindow(tk.Tk):
                                     fg=buttons_spec['fg'],
                                     font=buttons_spec['font'])
 
-        self.button_ess = tk.Button(master=self.frame_3,
-                                    text="Megtakarítás összesítő frissítése",
-                                    width=buttons_spec['widht'],
-                                    height=buttons_spec['height'],
-                                    bg=buttons_spec['bg'],
-                                    fg=buttons_spec['fg'],
-                                    font=buttons_spec['font'])
+        # self.button_ess = tk.Button(master=self.frame_3,
+        #                             text="Megtakarítás összesítő frissítése",
+        #                             width=buttons_spec['widht'],
+        #                             height=buttons_spec['height'],
+        #                             bg=buttons_spec['bg'],
+        #                             fg=buttons_spec['fg'],
+        #                             font=buttons_spec['font'])
 
         self.button_ut = tk.Button(master=self.frame_3,
                                    text="Táblázat adatok frissítése",
@@ -115,7 +115,7 @@ class MainWindow(tk.Tk):
         # frame_3
         self.text_0.grid(row=0, column=0, pady=5)
         self.button_ecs.grid(row=1, column=0, pady=5)
-        self.button_ess.grid(row=2, column=0, pady=5)
+        # self.button_ess.grid(row=2, column=0, pady=5)
         self.button_ut.grid(row=3, column=0, pady=5)
 
         # frame_4
@@ -125,7 +125,7 @@ class MainWindow(tk.Tk):
         self.button_nm.bind("<ButtonRelease>", self.nm_handler)
         self.button_nc.bind("<ButtonRelease>", self.nc_handler)
         self.button_ecs.bind("<ButtonRelease>", self.ecs_handler)
-        self.button_ess.bind("<ButtonRelease>", self.ess_handler)
+        # self.button_ess.bind("<ButtonRelease>", self.ess_handler)
         self.button_ut.bind("<ButtonRelease>", self.ut_handler)
         self.button_quit.bind("<ButtonRelease>", self.quit_handler)
 
