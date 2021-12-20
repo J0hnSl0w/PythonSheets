@@ -20,20 +20,20 @@ values = {'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date
           'rensum_erste': ['K21', "=-(SUMIF('{date}'!$G$4:$G$101;'{sheet_name}'!$A$7;'{date}'!$E$4:$E$101))+'{prev_date}'!K21"]
           }
 
-text_spec = {'bg': 'black',
-             'fg': 'white',
+text_spec = {'bg': '#1a936f',
+             'fg': '#f3e9d2',
              'width': 50,
              'height': 2,
              'font_c1': 'Sans 15 bold',
              'font_c2': 'Sans 12'}
 
-buttons_spec = {'bg': 'grey',
-                'fg': 'black',
+buttons_spec = {'bg': '#c6dabf',
+                'fg': '#114b5f',
                 'widht': 30,
                 'height': 2,
                 'font': 'Sans 10'}
 
-frame_spec = {'bg': 'black'}
+frame_spec = {'bg': text_spec['bg']}
 
 logger_spec = {'state': 'disabled',
                'width': 80,

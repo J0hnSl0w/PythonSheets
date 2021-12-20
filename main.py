@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     app = MainWindow(None, table_info)
     app.title('Táblázat szerkesztő')
-    app.configure(bg='black')
+    app.configure(bg=text_spec['bg'])
     app.resizable(width=False, height=False)
 
     stderrHandler = logging.StreamHandler()
