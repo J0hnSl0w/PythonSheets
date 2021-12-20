@@ -74,7 +74,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        module_logger.info('Kész!\n')
+        module_logger.info('Havi összekző frissítve!\n')
 
     def edit_savings_sheet(self):
         year = self.date['this_month'][:-4]
@@ -107,7 +107,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=saving_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        module_logger.info('Kész!\n')
+        module_logger.info('Megtakarítás összegző frissítve!\n')
 
     def add_new_month(self):
         module_logger.info(prints['edit_new_month'])
@@ -179,7 +179,7 @@ class EditSpreadsheet:
         # EditSpreadsheet.edit_savings_sheet(self)
         EditSpreadsheet.edit_mounthly_costs_sheet(self)
 
-        print('Kész!')
+        module_logger.info('Új év hozzáadva!\n')
 
         # show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_1.id, is_hidden=False)
         show_hide_wsheets(creds=self.creds, wbook_id=self.wbook.id, sheet_id=new_sheet_2.id, is_hidden=False)
