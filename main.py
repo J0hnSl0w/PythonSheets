@@ -2,8 +2,7 @@ from Assets.gui import *
 from Assets.logger import *
 
 if __name__ == '__main__':
-    # spreadsheet_name = 'Pénz'
-    table_info = {'spreadsheet_name': 'Pénz másolata',
+    table_info = {'spreadsheet_name': 'Pénz 2022',
                   'credentials_file': r'Assets/credentials.json',
                   'sheets_file': r'Assets/sheets_pm.jason'}
 
@@ -19,4 +18,3 @@ if __name__ == '__main__':
     module_logger.setLevel(logging.INFO)
 
     app.mainloop()
-
