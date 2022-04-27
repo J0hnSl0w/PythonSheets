@@ -12,15 +12,15 @@ mounthly_columns = {'01.': ['B', 2],
                     '12.': ['L', 13]}
 
 values = {
-    'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$50;'{sheet_name}'!$A2;'{date}'!$A$4:$A$50);SUMIF('{date}'!$G$4:$G$50;'{sheet_name}'!$A2;'{date}'!$E$4:$E$41))",
+    'mc_value': "=SUM(SUMIF('{date}'!$C$4:$C$100;'{sheet_name}'!$A2;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'{sheet_name}'!$A2;'{date}'!$E$4:$E$100))",
     'starting_kp': ['A3', "='{prev_date}'!A2"],
     'starting_b': ['E3', "='{prev_date}'!E2"],
-    'savings_1': ['K2', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A4;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A4;'{date}'!$E$4:$E$100)))"],
-    'savings_2': ['K3', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A5;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A5;'{date}'!$E$4:$E$100)))"],
+    'savings_1': ['K2', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A5;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A5;'{date}'!$E$4:$E$100)))"],
+    'savings_2': ['K3', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A6;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A6;'{date}'!$E$4:$E$100)))"],
     'savings_3': ['K4', "=SUM(K2:K3)+'{prev_date}'!K4"],
-    'uribol_1': ['K7', "=-(SUM(SUMIF('{date}'!$C$6:$C$100;'Havi kiadások {year}'!$A6;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A6;'{date}'!$E$4:$E$100)))"],
-    'uribol_2': ['K8', "=-(SUM(SUMIF('{date}'!$C$7:$C$100;'Havi kiadások {year}'!$A7;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A7;'{date}'!$E$4:$E$100)))"],
-    'uribol_3': ['K9', "=SUM(K2:K3)+'{prev_date}'!K9"],
+    'uribol_1': ['K7', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A7;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A7;'{date}'!$E$4:$E$100)))"],
+    'uribol_2': ['K8', "=-(SUM(SUMIF('{date}'!$C$4:$C$100;'Havi kiadások {year}'!$A8;'{date}'!$A$4:$A$100);SUMIF('{date}'!$G$4:$G$100;'Havi kiadások {year}'!$A8;'{date}'!$E$4:$E$100)))"],
+    'uribol_3': ['K9', "=SUM(K7:K8)+'{prev_date}'!K9"],
 }
 
 text_spec = {'bg': '#35455D',
