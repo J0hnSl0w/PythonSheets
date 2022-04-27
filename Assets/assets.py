@@ -74,7 +74,7 @@ class EditSpreadsheet:
         show_hide_cols(creds=self.creds, wbook_id=self.wbook.id, sheet_id=cost_sheet.id, is_hidden=False,
                        start=col[1] - 1, end=col[1])
 
-        module_logger.info('Havi összekző frissítve!\n')
+        module_logger.info('Havi összegző frissítve!\n')
 
     def edit_savings_sheet(self):
         year = self.date['this_month'][:-4]
