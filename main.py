@@ -3,7 +3,7 @@ from Assets.gui import *
 if __name__ == '__main__':
     table_info = {'spreadsheet_name': 'Klárka Pénze',
                   'credentials_file': r'Assets/credentials.json',
-                  'sheets_file': r'Assets/sheets_pm.jason'}
+                  'sheets_file': r'Assets/sheets_p.jason'}
 
     app = MainWindow(None, table_info)
     app.title('Táblázat szerkesztő')
